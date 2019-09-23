@@ -122,13 +122,8 @@ function load(fileId, start, toPlay){
   }
 
   if(toPlay) play = true;
-  if(fileId == "start"){
-    currentTopic = fileId;
-  }
-  else{
-    currentTopic = fileId;
-    sendLogToDb();
-  }
+  currentTopic = fileId;
+  sendLogToDb();
 
   console.log("To Load: " + fileId);
   if(keepMessages == false){
@@ -141,8 +136,11 @@ function load(fileId, start, toPlay){
       bot.loadFile(files[i].file).then( () => {
         bot.sortReplies();
         console.log(fileId + " loaded");
-        if(start) chatSetup(start);
-        else chatSetup("start");
+        if(start != null) chatSetup(start);
+        else{
+          if(isNameStored() == false) chatSetup("askname");
+          else chatSetup("start");
+        }
       });
     }
   }
@@ -153,7 +151,7 @@ function loadFromChat(fileId, start){ load(fileId, start); }
 
 function appendTypingIndicator(){
   stillChatting = true;
-  $(".messages").append($("<div class=\"typing-indicator\"><div class=\"user-photo\"><img src=\"bot.png\" id=\"bot-img\"></div><div class=\"dots\"><p class=\"chat-message\"><span id=\"typ1\"></span><span id=\"typ2\"></span><span id=\"typ3\"></span></p></div></div></div>"));
+  $(".messages").append($("<div class=\"typing-indicator\"><div class=\"user-photo\"><img src=\"img/bot.png\" id=\"bot-img\"></div><div class=\"dots\"><p class=\"chat-message\"><span id=\"typ1\"></span><span id=\"typ2\"></span><span id=\"typ3\"></span></p></div></div></div>"));
   $(".typing-indicator").delay(1000).fadeOut("fast");
   $(".chatlogs").animate({ scrollTop: $(".chatlogs")[0].scrollHeight }, 200);
 }
@@ -166,12 +164,12 @@ function appendMessage(isBot, isUser, text, showButtons){
   var photoId = "";
   if(isBot == true){
     newMessage.setAttribute("class", "chat bot");
-    photoSrc = "bot.png";
+    photoSrc = "img/bot.png";
     photoId = "bot-img";
   }
   else if(isUser == true){
     newMessage.setAttribute("class", "chat user");
-    photoSrc = "student.png";
+    photoSrc = "img/student.png";
     photoId = "user-img";
   }
   newMessage.setAttribute("id", bubbleId);
@@ -193,7 +191,7 @@ function appendMessage(isBot, isUser, text, showButtons){
   var speakerImg = document.createElement("img");
   speakerImg.setAttribute("class", "speaker");
   speakerImg.setAttribute("id", speakerId);
-  speakerImg.src = "speaker.png";
+  speakerImg.src = "img/speaker.png";
   speakerImg.onclick = function(){
     if(isPlaying == false) manualPlay(speakerImg.id, newMessage.id);
   }
@@ -201,7 +199,7 @@ function appendMessage(isBot, isUser, text, showButtons){
 
   var pauseImg = document.createElement("img");
   pauseImg.setAttribute("class", "pauseButton");
-  pauseImg.src = "pause.png"
+  pauseImg.src = "img/pause.png"
   pauseImg.onclick = function(){
     audioPlayer.pause();
     isPlaying = false;
@@ -211,7 +209,7 @@ function appendMessage(isBot, isUser, text, showButtons){
 
   if(isAQuestion){
     dictImg = document.createElement("img");
-    dictImg.src = "dict.png";
+    dictImg.src = "img/dict.png";
     dictImg.setAttribute("class", "dictButton");
     dictImg.style.display = "flex";
     dictImg.onclick = function(){

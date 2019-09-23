@@ -1,3 +1,3 @@
 module.exports = {
-    DB: 'mongodb://localhost:27017/tt_bunscoil'
+    DB: 'mongodb://localhost:27017/tt_meanscoil'
 }
