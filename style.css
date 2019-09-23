@@ -6,7 +6,7 @@ body{
 background-size: cover;
 }
 
-button:focus, input:focus{
+button:focus, input:focus, video:focus, audio:focus{
   outline: 0;
 }
 
@@ -27,6 +27,34 @@ audio{
   padding: 10px;
   font-family: monospace;
   font-size: 20px;
+}
+
+.monkey-ctn{
+  display: none;
+  width: 26%;
+  height: 200px;
+  position: fixed;
+  border-radius: 5px;
+  left: 20px;
+  top: 300px;
+  padding: 10px;
+  background-color: #FCF3CF;
+}
+
+.monkey-img{
+  width: 90%;
+  height: 200px;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  border-radius: 10px;
+}
+
+#monkey-vid{
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  box-shadow: 1px 1px 2px rgba(0,0,0, 0.25);
 }
 
 
@@ -152,6 +180,68 @@ audio{
   cursor:pointer;
 }
 
+/* Contents */
+.bot-contents{
+  background: #45B39D;
+  font-family: sans-serif;
+  font-size: 14px;
+  position: fixed;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border-radius: 5px;
+  height: 300px;
+  width: 20%;
+  top: 90px;
+  right: 50px;
+  transition: 0.7s;
+  opacity: 1;
+  z-index: 1;
+  display: none;
+  /*right: 350px;*/
+}
+
+.bot-contents::-webkit-scrollbar{
+  width: 5px;
+  display: none;
+}
+
+.bot-contents::-webkit-scrollbar-thumb{
+  border-radius: 8px;
+}
+
+.bot-collapsable{
+  background-color: #45B39D;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  text-align: left;
+}
+
+.bot-collapsable:hover{
+  background-color: #16A085;
+}
+
+.bot-content{
+  max-height: 0;
+  width: 100%;
+  overflow-y: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f1f1f1;
+  z-index: 5;
+}
+
+.bot-content li{
+  margin-top: 3px;
+}
+
+
+.bot-content li:hover{
+  cursor: pointer;
+  color: #70a87f;
+}
+
 /* Input */
 .chatform{
   margin-top: 20px;
@@ -228,7 +318,7 @@ li{
   justify-content: space-evenly;
   text-align: center;
   left: 50px;
-  top: 200px;
+  top: 100px;
   width: 20%;
   background: #FCF3CF;
   padding: 10px;
@@ -259,16 +349,20 @@ li{
   font-size: 83%;
 }
 
-#autoplay{
+#autoplay, #monkeyCheck{
   width: 15px;
   height: 15px;
 }
 
-.checkSpan{
+.checkSpan, .checkMonkey{
   position: absolute;
   font-size: 18px;
   top: 20px;
   margin-left: 10px;
+}
+
+.checkMonkey{
+  margin-left: 100px;
 }
 
 .record:hover{
@@ -459,6 +553,39 @@ button:focus, audio:focus{
   border-radius: 3px;
   margin-top: 10px;
   font-family: sans-serif;
+}
+
+.aboutContent{
+  position: absolute;
+  width: 50%;
+  top: 100px;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: cursive;
+  text-align: justify;
+  background: #A9CCE3;
+  height: 300px;
+}
+
+.aboutContentInner{
+  position: relative;
+  top: 10px;
+}
+
+.aboutSum{
+  position: absolute;
+  bottom: 20px;
+  font-size: 300%;
+  left: 90px;
+}
+
+#aboutMonkey{
+  width: 12%;
+  height: 12%;
+}
+
+.num{
+  color: #fff;
 }
 
 #taighin{

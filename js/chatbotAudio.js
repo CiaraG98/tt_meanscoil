@@ -27,12 +27,14 @@ function audio(newReply, id, isUser){
       bubbleText = "Úsáid tearma.ie chun cabhrú leat munar thuig tú téarma ar leith.";
       var newBubble = { text: bubbleText, id: thisId, url: null, isUser: isUser };
       bubbleObjArr.push(newBubble);
+      makeMessageObj(isUser, bubbleText);
       testCallAudio(bubbleText, thisId);
     }
     else if(inp[3] == "//www"){
       bubbleText = "An bhfuil aon fhocail nár thuig tú? Féach sa bhfoclóir ag teanglann.ie.";
       var newBubble = { text: bubbleText, id: thisId, url: null, isUser: isUser };
       bubbleObjArr.push(newBubble);
+      makeMessageObj(isUser, bubbleText);
       testCallAudio(bubbleText, thisId);
     }
     else if(inp != ""){
@@ -43,6 +45,7 @@ function audio(newReply, id, isUser){
           bubbleText = "Mícheart, beagnach ceart ach féach arís air, a " + getName() + ". Hint: teanglann.ie"
           var newBubble = { text: bubbleText, id: thisId, url: null, isUser: isUser };
           bubbleObjArr.push(newBubble);
+          makeMessageObj(isUser, bubbleText);
           testCallAudio(bubbleText, thisId);
         }
       }
@@ -52,6 +55,7 @@ function audio(newReply, id, isUser){
         }
         var newBubble = { text: bubbleText , id: thisId, url: null, isUser: isUser };
         bubbleObjArr.push(newBubble);
+        makeMessageObj(isUser, bubbleText);
         testCallAudio(bubbleText, thisId);
       }
     }
@@ -59,6 +63,7 @@ function audio(newReply, id, isUser){
   else{
     var newBubble = { text: audio_reply , id: thisId, url: null, isUser: isUser };
     bubbleObjArr.push(newBubble);
+    makeMessageObj(isUser, audio_reply);
     testCallAudio(audio_reply, thisId);
   }
 }
@@ -118,11 +123,10 @@ function editMessageForAudio(){
 
 function testCallAudio(testString, id){
   console.log(testString);
-  var messageBubble = {text: testString, dialect: ""};
+  var messageBubble = {text: testString, dialect: thisDialect};
   if(thisDialect == "connemara") messageBubble.dialect = "CM";
   else if(thisDialect == "donegal") messageBubble.dialect = "GD";
   else if(thisDialect == "kerry") messageBubble.dialect = "MU";
-  console.log(messageBubble.dialect);
 
   request.open('POST', 'http://localhost:4001/getAudio', true);
   request.setRequestHeader("Content-type", "application/json");
@@ -143,7 +147,7 @@ function testCallAudio(testString, id){
 //plays audio
 function playAudio(bubble){
   if(bubble.url){
-    audioPlayer.src = bubble.url;
+    audioPlayer = new Audio(bubble.url);
     var playPromise = audioPlayer.play();
     if(playPromise !== undefined){
       playPromise.then(_ => {

@@ -22,12 +22,14 @@ var record;
 var dialect;
 var autoplay;
 var audioDiv;
+var contents;
+var checkMonkey;
+var monkey;
 
 //for database....
 var currentTopic = "";
 var complete = false;
 var messageforDb = "";
-var switchTopic = false;
 var level1Complete = false;
 var level2Complete = false;
 var level3Complete = false;
@@ -58,6 +60,34 @@ function setup(){
   record = document.querySelector(".record");
   autoplay = document.querySelector(".checkSpan");
   audioDiv = document.querySelector(".audioDiv");
+  contents = document.querySelector(".bot-contents");
+  checkMonkey = document.querySelector(".checkMonkey");
+  monkey = document.querySelector(".monkey-ctn");
+
+  //collapsable menu for the contents
+  var coll = document.getElementsByClassName("bot-collapsable");
+  var i;
+  for(i = 0; i < coll.length; i++){
+    coll[i].addEventListener("click", function(){
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if(content.style.maxHeight){
+        content.style.maxHeight = null;
+      }
+      else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+      //$(".bot-contents").animate({ scrollTop: $(".bot-contents")[0].scrollHeight }, 200);
+    });
+  }
+
+  if(checkMonkey){
+    var checkbox = document.querySelector("#monkeyCheck");
+    checkbox.addEventListener("click", function(){
+      if(checkbox.checked == true) monkey.style.display = "flex";
+      else if(checkbox.checked == false) monkey.style.display = "none";
+    });
+  }
 }
 
 function closeDict(){
@@ -75,6 +105,7 @@ function loadBot(){
     dialect.style.display = "none";
     bot.style.display = "block";
     audioDiv.style.display = "flex";
+    contents.style.display = "block";
     load("BriathraNeamhrialta", "askName");
   }, 200);
 }
@@ -92,12 +123,11 @@ function load(fileId, start, toPlay){
 
   if(toPlay) play = true;
   if(fileId == "start"){
-    switchTopic = false;
     currentTopic = fileId;
   }
   else{
     currentTopic = fileId;
-    switchTopic = true;
+    sendLogToDb();
   }
 
   console.log("To Load: " + fileId);
@@ -210,21 +240,16 @@ function appendMessage(isBot, isUser, text, showButtons){
 
 //CHAT REPLIES AND INPUTS
 function chatSetup(text, holdMessages, showButtons){
-  //console.log(holdMessages);
-  //console.log("chatSetup: " + text);
   var messages = document.querySelector(".messages");
   if(holdMessages == "true" && audioCheckbox.checked == true){
     audioPlayer.addEventListener("ended", function(){
-      isPlaying = false;
       bot.reply("local-user", text).then( (reply) => {
         if(reply != ""){
           //console.log(reply);
-          //makeMessageObj(true, reply);
           appendTypingIndicator();
           setTimeout(function(){
             appendMessage(true, false, reply, showButtons);
             if(play) audio(reply, bubbleId, false);
-
             $(".chatlogs").animate({ scrollTop: $(".chatlogs")[0].scrollHeight }, 200);
           }, 1200);
         }
@@ -235,12 +260,10 @@ function chatSetup(text, holdMessages, showButtons){
     bot.reply("local-user", text).then( (reply) => {
       if(reply != ""){
         //console.log(reply);
-        //makeMessageObj(true, reply);
         appendTypingIndicator();
         setTimeout(function(){
           appendMessage(true, false, reply, showButtons);
           if(play) audio(reply, bubbleId, false);
-
           $(".chatlogs").animate({ scrollTop: $(".chatlogs")[0].scrollHeight }, 200);
         }, 1200);
       }
@@ -250,14 +273,12 @@ function chatSetup(text, holdMessages, showButtons){
 }
 
 function chat(){
-  //if(holdInput) setTimeout(function(){}, 1200);
   var input = document.getElementById("user_input").value;
   $(".chatform").on("submit", (event) => {
     event.preventDefault();
   });
   if(input != ""){
     document.getElementById("user_input").value = "";
-    //makeMessageObj(false, input);
     appendMessage(false, true, input);
     audio(input, bubbleId, true)
     $(".chatlogs").animate({ scrollTop: $(".chatlogs")[0].scrollHeight }, 200);
@@ -268,7 +289,7 @@ function chat(){
       appendTypingIndicator();
       setTimeout(function(){
         appendMessage(true, false, reply);
-        //if(play) audio(reply, bubbleId, false);
+        if(play) audio(reply, bubbleId, false);
         $(".chatlogs").animate({ scrollTop: $(".chatlogs")[0].scrollHeight }, 200);
       }, 1200);
       $(".chatlogs").animate({ scrollTop: $(".chatlogs")[0].scrollHeight }, 200);
